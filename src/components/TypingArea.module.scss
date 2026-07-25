@@ -1,0 +1,18 @@
+
+.userInput {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.ghost {
+    color: blue;
+}
+
+.correct {
+    color: green;
+}   
+
+.incorrect {
+    color: red;
+}   
