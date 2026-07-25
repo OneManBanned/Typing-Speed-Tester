@@ -8,18 +8,30 @@ function TypingArea() {
 
     const paragraphs: string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     const characters: string[] = paragraphs.split('')
-    
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserInput(e.target.value)
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setUserInput(e.target.value)
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+
+        const blockedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'End', 'Home']
+
+        if (e.key === 'a' && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault()
+        }
+
+        if (blockedKeys.includes(e.key)) {
+            e.preventDefault()
+        }
     }
 
     return (
         <>
             <input
                 className="hidden-input"
-                type="text" 
+                type="text"
                 value={userInput}
                 onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                onPaste={(e) => e.preventDefault()}
                 autoFocus
             ></input>
 
@@ -37,8 +49,6 @@ function TypingArea() {
                         : <span key={index} className="ghost">{char}</span>
 
                 })}
-
-
 
             </div>
         </>
