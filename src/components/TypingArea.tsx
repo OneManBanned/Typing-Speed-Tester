@@ -39,10 +39,12 @@ function TypingArea() {
 
         const state : CharacterState = getCharacterState(char, index, userInput)
         const { displayChar, hasTyped, isCorrect } = state
+        
+        const isCursor = index === userInput.length
 
         let className = hasTyped
             ? isCorrect ? styles.correct : styles.incorrect
-            : styles.isGhost
+            : isCursor ? styles.cursor : styles.isGhost
 
         return <span key={index} className={className}>{displayChar}</span>
     }
