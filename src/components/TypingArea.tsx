@@ -1,4 +1,5 @@
 import { useState, useRef, type JSX } from "react"
+import { getCharacterState, type CharacterState } from "../utils/typingUtils"
 import styles from './TypingArea.module.scss'
 
 function TypingArea() {
@@ -9,37 +10,10 @@ function TypingArea() {
     const paragraphs: string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     const characters: string[] = paragraphs.split('')
 
-    type CharacterState = {
-        displayChar: string,
-        hasTyped: boolean,
-        isCorrect: boolean
-    }
-
-    const getCharacterState = (char: string, index: number, userInput: string): CharacterState => {
-        const userChar = userInput[index]
-        const hasTyped = index < userInput.length
-
-        let displayChar: string = char;
-        let isCorrect: boolean = false;
-
-        if (hasTyped) {
-            isCorrect = userChar === char
-            displayChar = userChar
-
-            if (!isCorrect && userChar === ' ') {
-                displayChar = '_'
-            }
-
-        }
-
-        return { displayChar, hasTyped, isCorrect }
-    }
-
     const renderCharacter = (char: string, index: number): JSX.Element => {
 
-        const state : CharacterState = getCharacterState(char, index, userInput)
+        const state: CharacterState = getCharacterState(char, index, userInput)
         const { displayChar, hasTyped, isCorrect } = state
-        
         const isCursor = index === userInput.length
 
         let className = hasTyped
@@ -77,13 +51,8 @@ function TypingArea() {
                 autoFocus
             ></input>
 
-            <div
-                className={styles.typingArea}
-                onClick={handleTypingAreaClick}
-            >
+            <div className={styles.typingArea} onClick={handleTypingAreaClick}>
                 {characters.map((c, i) => renderCharacter(c, i))}
-
-
             </div>
         </>
     )
