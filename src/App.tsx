@@ -1,4 +1,4 @@
-import TypingArea from './components/TypingArea.tsx'
+import TypingArea from './components/TypingArea'
 
 function App() {
 

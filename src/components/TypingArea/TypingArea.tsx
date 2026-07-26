@@ -1,6 +1,6 @@
 import { useState, useRef, type JSX } from "react"
-import { getCharacterState, type CharacterState } from "../utils/typingUtils"
-import styles from './TypingArea.module.scss'
+import { getCharacterState, type CharacterState } from "../../utils/typingUtils"
+import styles from '../TypingArea/TypingArea.module.scss'
 
 function TypingArea() {
 

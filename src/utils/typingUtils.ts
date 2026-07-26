@@ -1,4 +1,3 @@
-
 export type CharacterState = {
     displayChar: string,
     hasTyped: boolean,
