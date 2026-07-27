@@ -5,16 +5,16 @@ import styles from '../TypingArea/TypingArea.module.scss'
 type TypingAreaProps = {
     startTimer: () => void
     stopTimer: () => void
-    onTimerUpdate: (timeElapsed: number) => void
     onStatsUpdate: (stats: { wpm: number, accuracy: number }) => void
+    elapsedTime: number
 }
 
-function TypingArea({ startTimer, stopTimer, onTimerUpdate, onStatsUpdate }: TypingAreaProps) {
+function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime }: TypingAreaProps) {
 
     const inputRef = useRef<HTMLInputElement>(null)
     const [userInput, setUserInput] = useState('')
 
-    const paragraphs: string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    const paragraphs: string = "The cat jumped over the moon"
     const characters: string[] = paragraphs.split('')
 
     useEffect(() => {
@@ -28,6 +28,18 @@ function TypingArea({ startTimer, stopTimer, onTimerUpdate, onStatsUpdate }: Typ
             stopTimer()
         }
     }, [userInput]) 
+    
+    useEffect(() => {
+        const correctChars = characters.filter((char, index) => char === userInput[index]).length
+        const accuracy = userInput.length > 0 ? (correctChars / userInput.length) * 100 : 100
+        
+        let wpm = 0
+        if (elapsedTime > 0 && userInput.length > 0) {
+            wpm = (correctChars / 5) / (elapsedTime / 60)
+        }   
+
+        onStatsUpdate({ wpm: Math.round(wpm), accuracy: Math.round(accuracy) })
+    }, [userInput, elapsedTime])        
 
     const renderCharacter = (char: string, index: number): JSX.Element => {
 
@@ -43,7 +55,12 @@ function TypingArea({ startTimer, stopTimer, onTimerUpdate, onStatsUpdate }: Typ
     }
 
     const handleTypingAreaClick = () => inputRef.current?.focus()
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setUserInput(e.target.value)
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (userInput.length >= characters.length) 
+            return;
+
+         setUserInput(e.target.value)
+    }
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
         const blockedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'End', 'Home']
@@ -67,6 +84,7 @@ function TypingArea({ startTimer, stopTimer, onTimerUpdate, onStatsUpdate }: Typ
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 onPaste={(e) => e.preventDefault()}
+                disabled={userInput.length >= characters.length}
                 autoFocus
             ></input>
 

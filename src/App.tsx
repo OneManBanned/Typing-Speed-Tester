@@ -31,8 +31,8 @@ function App() {
       <TypingArea
         startTimer={() => setIsTimerRunning(true)}
         stopTimer={() => setIsTimerRunning(false)}
-        onTimerUpdate={setTimeElapsed}
         onStatsUpdate={setStats}
+        elapsedTime={timeElapsed}
       />
     </>
   )

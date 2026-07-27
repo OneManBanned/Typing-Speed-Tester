@@ -18,6 +18,8 @@ function Stats({ timeElapsed, wpm, accuracy }: statsProps) {
         >
             {timeElapsed}
         </div>
+        <div>{wpm}</div>
+        <div>{accuracy}</div>
     </div>
 
 
