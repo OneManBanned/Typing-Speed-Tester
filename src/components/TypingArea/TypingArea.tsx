@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, type JSX } from "react"
+import { useEffect, useRef, type JSX } from "react"
 import { getCharacterState, type CharacterState } from "../../utils/typingUtils"
 import styles from '../TypingArea/TypingArea.module.scss'
 
@@ -7,15 +7,16 @@ type TypingAreaProps = {
     stopTimer: () => void
     onStatsUpdate: (stats: { wpm: number, accuracy: number }) => void
     elapsedTime: number
+    userInput: string
+    setUserInput: (input: string) => void
+    isCompleted: boolean
+    characters: string[]
 }
 
-function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime }: TypingAreaProps) {
+function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime, userInput, setUserInput, isCompleted, characters }: TypingAreaProps) {
 
     const inputRef = useRef<HTMLInputElement>(null)
-    const [userInput, setUserInput] = useState('')
 
-    const paragraphs: string = "The cat jumped over the moon"
-    const characters: string[] = paragraphs.split('')
 
     useEffect(() => {
         if (userInput.length === 1) {
@@ -41,6 +42,7 @@ function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime }: Typin
         onStatsUpdate({ wpm: Math.round(wpm), accuracy: Math.round(accuracy) })
     }, [userInput, elapsedTime])        
 
+    
     const renderCharacter = (char: string, index: number): JSX.Element => {
 
         const state: CharacterState = getCharacterState(char, index, userInput)
@@ -53,6 +55,7 @@ function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime }: Typin
 
         return <span key={index} className={className}>{displayChar}</span>
     }
+    
 
     const handleTypingAreaClick = () => inputRef.current?.focus()
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +87,7 @@ function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime }: Typin
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 onPaste={(e) => e.preventDefault()}
-                disabled={userInput.length >= characters.length}
+                disabled={isCompleted}
                 autoFocus
             ></input>
 
