@@ -7,7 +7,7 @@ type mode = 'passage' | 'timed';
 
 function App() {
 
-  const [mode, setMode] = useState<mode>('passage') 
+  const [mode, setMode] = useState<mode>('passage')
   const [userInput, setUserInput] = useState<string>('')
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
@@ -15,27 +15,27 @@ function App() {
     wpm: 0,
     accuracy: 100
   })
-    const paragraphs: string = "The cat jumped over the moon"
-    const characters: string[] = paragraphs.split('')
-
-    const isCompleted = mode === 'passage' ? userInput.length === characters.length : timeElapsed >= 60
+  const paragraphs: string = "The cat jumped over the moon"
+  const characters: string[] = paragraphs.split('')
+  const isCompleted = mode === 'passage'
+    ? userInput.length === characters.length
+    : userInput.length === characters.length || timeElapsed >= 60
 
   useEffect(() => {
     if (!isTimerRunning) return
-      
+
     const timer = setInterval(() => {
       setTimeElapsed(prevTime => prevTime + 1)
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [isTimerRunning])  
-  
+  }, [isTimerRunning])
+
   useEffect(() => {
-    if (mode === 'timed' && timeElapsed >= 60) {
+    if (isCompleted) {
       setIsTimerRunning(false)
-    } 
-  }, [timeElapsed, mode])
-      
+    }
+  }, [isCompleted])
 
   return (
     <>
@@ -43,7 +43,7 @@ function App() {
         mode={mode}
         onModeChange={(newMode: mode) => {
           setMode(newMode)
-          setTimeElapsed(mode === 'timed' ? 60 : 0)
+          setTimeElapsed(0)
           setIsTimerRunning(false)
           setStats({ wpm: 0, accuracy: 100 })
           setUserInput('')
@@ -57,7 +57,6 @@ function App() {
       />
       <TypingArea
         startTimer={() => setIsTimerRunning(true)}
-        stopTimer={() => setIsTimerRunning(false)}
         onStatsUpdate={setStats}
         elapsedTime={timeElapsed}
         userInput={userInput}

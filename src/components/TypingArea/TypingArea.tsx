@@ -4,7 +4,6 @@ import styles from '../TypingArea/TypingArea.module.scss'
 
 type TypingAreaProps = {
     startTimer: () => void
-    stopTimer: () => void
     onStatsUpdate: (stats: { wpm: number, accuracy: number }) => void
     elapsedTime: number
     userInput: string
@@ -13,22 +12,15 @@ type TypingAreaProps = {
     characters: string[]
 }
 
-function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime, userInput, setUserInput, isCompleted, characters }: TypingAreaProps) {
+function TypingArea({ startTimer, onStatsUpdate, elapsedTime, userInput, setUserInput, isCompleted, characters }: TypingAreaProps) {
 
     const inputRef = useRef<HTMLInputElement>(null)
-
 
     useEffect(() => {
         if (userInput.length === 1) {
             startTimer()
         }
     }, [userInput])
-    
-    useEffect(() => {   
-        if (userInput.length === characters.length) {
-            stopTimer()
-        }
-    }, [userInput]) 
     
     useEffect(() => {
         const correctChars = characters.filter((char, index) => char === userInput[index]).length
@@ -42,7 +34,6 @@ function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime, userInp
         onStatsUpdate({ wpm: Math.round(wpm), accuracy: Math.round(accuracy) })
     }, [userInput, elapsedTime])        
 
-    
     const renderCharacter = (char: string, index: number): JSX.Element => {
 
         const state: CharacterState = getCharacterState(char, index, userInput)
@@ -55,7 +46,6 @@ function TypingArea({ startTimer, stopTimer, onStatsUpdate, elapsedTime, userInp
 
         return <span key={index} className={className}>{displayChar}</span>
     }
-    
 
     const handleTypingAreaClick = () => inputRef.current?.focus()
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
