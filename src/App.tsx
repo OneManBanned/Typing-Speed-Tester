@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import TypingArea from './components/TypingArea'
 import Stats from './components/Stats'
 import Options from './components/Options'
@@ -6,6 +6,8 @@ import Options from './components/Options'
 type mode = 'passage' | 'timed';
 
 function App() {
+  
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const [mode, setMode] = useState<mode>('passage')
   const [userInput, setUserInput] = useState<string>('')
@@ -36,6 +38,14 @@ function App() {
       setIsTimerRunning(false)
     }
   }, [isCompleted])
+  
+  useEffect(() => {
+    if (inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 0)
+    }
+  }, [mode])
 
   return (
     <>
@@ -56,6 +66,7 @@ function App() {
         mode={mode}
       />
       <TypingArea
+        ref={inputRef}
         startTimer={() => setIsTimerRunning(true)}
         onStatsUpdate={setStats}
         elapsedTime={timeElapsed}
