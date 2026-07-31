@@ -8,7 +8,7 @@ type mode = 'passage' | 'timed';
 type difficulty = 'easy' | 'medium' | 'hard';
 
 function App() {
-  
+
   const passages = data;
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -22,11 +22,17 @@ function App() {
     accuracy: 100
   })
   const [difficulty, setDifficulty] = useState<difficulty>('easy')
-  const paragraphs: string = passages[difficulty][5].text
-  const characters: string[] = paragraphs.split('')
+  const [currentPassage, setCurrentPassage] = useState<string>(passages[difficulty][0].text)
+  const characters: string[] = currentPassage.split('')
   const isCompleted = mode === 'passage'
     ? userInput.length === characters.length
     : userInput.length === characters.length || timeElapsed >= 60
+
+  useEffect(() => {
+    const diffPassage = passages[difficulty]
+    const randomIndex = Math.floor(Math.random() * diffPassage.length)
+    setCurrentPassage(diffPassage[randomIndex].text)
+  }, [difficulty])
 
   useEffect(() => {
     if (!isTimerRunning) return
@@ -43,7 +49,7 @@ function App() {
       setIsTimerRunning(false)
     }
   }, [isCompleted])
-  
+
   useEffect(() => {
     if (inputRef.current) {
       setTimeout(() => {
@@ -56,6 +62,8 @@ function App() {
     <>
       <Options
         mode={mode}
+        difficulty={difficulty}
+        onDifficultyChange={(d) => setDifficulty(d)}
         onModeChange={(newMode: mode) => {
           setMode(newMode)
           setTimeElapsed(0)
