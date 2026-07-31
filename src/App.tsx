@@ -1,12 +1,16 @@
+import data from './data/data.json'
 import { useState, useEffect, useRef } from 'react'
 import TypingArea from './components/TypingArea'
 import Stats from './components/Stats'
 import Options from './components/Options'
 
 type mode = 'passage' | 'timed';
+type difficulty = 'easy' | 'medium' | 'hard';
 
 function App() {
   
+  const passages = data;
+
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [mode, setMode] = useState<mode>('passage')
@@ -17,7 +21,8 @@ function App() {
     wpm: 0,
     accuracy: 100
   })
-  const paragraphs: string = "The cat jumped over the moon"
+  const [difficulty, setDifficulty] = useState<difficulty>('easy')
+  const paragraphs: string = passages[difficulty][5].text
   const characters: string[] = paragraphs.split('')
   const isCompleted = mode === 'passage'
     ? userInput.length === characters.length
