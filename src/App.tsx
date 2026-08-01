@@ -56,21 +56,32 @@ function App() {
         inputRef.current?.focus()
       }, 0)
     }
-  }, [mode])
+  }, [mode, difficulty])
+
+  const resetTest = () => {
+    setTimeElapsed(0)
+    setIsTimerRunning(false)
+    setStats({ wpm: 0, accuracy: 100 })
+    setUserInput('')
+  }
+
+  const onModeChange = (newMode: mode) => {
+    setMode(newMode)
+    resetTest()
+  }
+
+  const onDifficultyChange = (newDifficulty: difficulty) => {
+    setDifficulty(newDifficulty)
+    resetTest()
+  }
 
   return (
     <>
       <Options
         mode={mode}
         difficulty={difficulty}
-        onDifficultyChange={(d) => setDifficulty(d)}
-        onModeChange={(newMode: mode) => {
-          setMode(newMode)
-          setTimeElapsed(0)
-          setIsTimerRunning(false)
-          setStats({ wpm: 0, accuracy: 100 })
-          setUserInput('')
-        }}
+        onDifficultyChange={onDifficultyChange}
+        onModeChange={onModeChange}
       />
       <Stats
         timeElapsed={timeElapsed}
