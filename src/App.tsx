@@ -1,11 +1,10 @@
+import type { difficulty, mode, Stats } from './types'
 import data from './data/data.json'
 import { useState, useEffect, useRef } from 'react'
 import TypingArea from './components/TypingArea'
 import Stats from './components/Stats'
 import Options from './components/Options'
 
-type mode = 'passage' | 'timed';
-type difficulty = 'easy' | 'medium' | 'hard';
 
 function App() {
 
@@ -17,13 +16,14 @@ function App() {
   const [userInput, setUserInput] = useState<string>('')
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<stats>({
     wpm: 0,
     accuracy: 100
   })
   const [difficulty, setDifficulty] = useState<difficulty>('easy')
   const [currentPassage, setCurrentPassage] = useState<string>(passages[difficulty][0].text)
   const characters: string[] = currentPassage.split('')
+
   const isCompleted = mode === 'passage'
     ? userInput.length === characters.length
     : userInput.length === characters.length || timeElapsed >= 60
