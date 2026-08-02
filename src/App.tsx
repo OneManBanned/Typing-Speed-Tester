@@ -1,3 +1,4 @@
+import type { difficulty, mode, StatsData } from './types'
 import { getRandomPassage, getInitialPassage } from './utils/passageUtils'
 import { useState, useEffect, useRef } from 'react'
 import TypingArea from './components/TypingArea'

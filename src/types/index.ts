@@ -1,6 +1,6 @@
 export type mode = 'passage' | 'timed';
 export type difficulty = 'easy' | 'medium' | 'hard';
-export type Stats = {
+export type StatsData = {
     wpm: number;
     accuracy: number;
 };
