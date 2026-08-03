@@ -1,6 +1,9 @@
-import type { difficulty, mode, StatsData } from './types'
-import { getRandomPassage, getInitialPassage } from './utils/passageUtils'
 import { useState, useEffect, useRef } from 'react'
+
+import { useTimer } from './hooks/useTimer'
+import { getRandomPassage, getInitialPassage } from './utils/passageUtils'
+import type { difficulty, mode, StatsData } from './types'
+
 import TypingArea from './components/TypingArea'
 import Stats from './components/Stats'
 import Options from './components/Options'
@@ -9,12 +12,11 @@ import Options from './components/Options'
 function App() {
 
   const inputRef = useRef<HTMLInputElement>(null)
+  const { timeElapsed, startTimer, resetTimer, stopTimer } = useTimer()
 
   const [mode, setMode] = useState<mode>('passage')
   const [userInput, setUserInput] = useState<string>('')
-  const [timeElapsed, setTimeElapsed] = useState(0)
-  const [isTimerRunning, setIsTimerRunning] = useState(false)
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<StatsData>({
     wpm: 0,
     accuracy: 100
   })
@@ -31,19 +33,7 @@ function App() {
   }, [difficulty])
 
   useEffect(() => {
-    if (!isTimerRunning) return
-
-    const timer = setInterval(() => {
-      setTimeElapsed(prevTime => prevTime + 1)
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [isTimerRunning])
-
-  useEffect(() => {
-    if (isCompleted) {
-      setIsTimerRunning(false)
-    }
+    if (isCompleted) stopTimer()
   }, [isCompleted])
 
   useEffect(() => {
@@ -55,8 +45,7 @@ function App() {
   }, [mode, difficulty])
 
   const resetTest = () => {
-    setTimeElapsed(0)
-    setIsTimerRunning(false)
+    resetTimer()
     setStats({ wpm: 0, accuracy: 100 })
     setUserInput('')
   }
@@ -87,9 +76,9 @@ function App() {
       />
       <TypingArea
         ref={inputRef}
-        startTimer={() => setIsTimerRunning(true)}
-        onStatsUpdate={setStats}
+        startTimer={startTimer}
         elapsedTime={timeElapsed}
+        onStatsUpdate={setStats}
         userInput={userInput}
         setUserInput={setUserInput}
         isCompleted={isCompleted}

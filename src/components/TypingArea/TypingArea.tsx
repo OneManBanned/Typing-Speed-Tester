@@ -51,49 +51,44 @@ const TypingArea = forwardRef<HTMLInputElement, TypingAreaProps>(({ ...props }, 
     const handleTypingAreaClick = () => {
         if (ref && typeof ref !== 'function') {
             ref.current?.focus()
-
         }
     }
 
-        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (userInput.length >= characters.length)
-                return;
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (userInput.length >= characters.length)
+            return;
 
-            setUserInput(e.target.value)
-        }
+        setUserInput(e.target.value)
+    }
 
-        const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
-            const blockedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'End', 'Home']
+        const blockedKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'End', 'Home']
 
-            if (e.key === 'a' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault()
-            }
+        if (e.key === 'a' && (e.ctrlKey || e.metaKey)) e.preventDefault()
+        if (blockedKeys.includes(e.key)) e.preventDefault()
+        
+    }
 
-            if (blockedKeys.includes(e.key)) {
-                e.preventDefault()
-            }
-        }
+    return (
+        <>
+            <input
+                className={styles.userInput}
+                value={userInput}
+                type="text"
+                ref={ref}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                onPaste={(e) => e.preventDefault()}
+                disabled={isCompleted}
+                autoFocus
+            ></input>
 
-        return (
-            <>
-                <input
-                    className={styles.userInput}
-                    value={userInput}
-                    type="text"
-                    ref={ref}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                    onPaste={(e) => e.preventDefault()}
-                    disabled={isCompleted}
-                    autoFocus
-                ></input>
+            <div className={styles.typingArea} onClick={handleTypingAreaClick}>
+                {characters.map((c, i) => renderCharacter(c, i))}
+            </div>
+        </>
+    )
+})
 
-                <div className={styles.typingArea} onClick={handleTypingAreaClick}>
-                    {characters.map((c, i) => renderCharacter(c, i))}
-                </div>
-            </>
-        )
-    })
-
-    export default TypingArea
+export default TypingArea
