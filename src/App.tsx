@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
 import { useTimer } from './hooks/useTimer'
+import { useFocus } from './hooks/useFocus'
 import { isTestComplete } from './utils/testUtils'
 import { getRandomPassage, getInitialPassage } from './utils/passageUtils'
 import type { difficulty, mode, StatsData } from './types'
@@ -35,13 +36,7 @@ function App() {
     if (isCompleted) stopTimer()
   }, [isCompleted])
 
-  useEffect(() => {
-    if (inputRef.current) {
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 0)
-    }
-  }, [mode, difficulty])
+useFocus(inputRef, [mode, difficulty])  
 
   const resetTest = () => {
     resetTimer()
