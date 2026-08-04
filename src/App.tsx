@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
 import { useTimer } from './hooks/useTimer'
+import { isTestComplete } from './utils/testUtils'
 import { getRandomPassage, getInitialPassage } from './utils/passageUtils'
 import type { difficulty, mode, StatsData } from './types'
 
@@ -24,9 +25,7 @@ function App() {
   const [currentPassage, setCurrentPassage] = useState<string>(getInitialPassage('easy'))
   const characters: string[] = currentPassage.split('')
 
-  const isCompleted = mode === 'passage'
-    ? userInput.length === characters.length
-    : userInput.length === characters.length || timeElapsed >= 60
+  const isCompleted = isTestComplete(mode, userInput, characters, timeElapsed);
 
   useEffect(() => {
     setCurrentPassage(getRandomPassage(difficulty))
