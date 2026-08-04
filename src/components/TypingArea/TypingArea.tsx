@@ -1,10 +1,10 @@
 import { forwardRef, useEffect, type JSX } from "react"
+
 import { getCharacterState, type CharacterState } from "../../utils/typingUtils"
 import styles from '../TypingArea/TypingArea.module.scss'
 
 type TypingAreaProps = {
     startTimer: () => void
-    onStatsUpdate: (stats: { wpm: number, accuracy: number }) => void
     elapsedTime: number
     userInput: string
     setUserInput: (input: string) => void
@@ -14,25 +14,13 @@ type TypingAreaProps = {
 
 const TypingArea = forwardRef<HTMLInputElement, TypingAreaProps>(({ ...props }, ref) => {
 
-    const { startTimer, onStatsUpdate, elapsedTime, userInput, setUserInput, characters, isCompleted } = props
+    const { startTimer, userInput, setUserInput, characters, isCompleted } = props
 
     useEffect(() => {
         if (userInput.length === 1) {
             startTimer()
         }
     }, [userInput])
-
-    useEffect(() => {
-        const correctChars = characters.filter((char, index) => char === userInput[index]).length
-        const accuracy = userInput.length > 0 ? (correctChars / userInput.length) * 100 : 100
-
-        let wpm = 0
-        if (elapsedTime > 0 && userInput.length > 0) {
-            wpm = (correctChars / 5) / (elapsedTime / 60)
-        }
-
-        onStatsUpdate({ wpm: Math.round(wpm), accuracy: Math.round(accuracy) })
-    }, [userInput, elapsedTime])
 
     const renderCharacter = (char: string, index: number): JSX.Element => {
 

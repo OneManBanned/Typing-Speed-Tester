@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 
 import { useTimer } from './hooks/useTimer'
 import { useFocus } from './hooks/useFocus'
+import { useStats } from './hooks/useStats'
 import { isTestComplete } from './utils/testUtils'
 import { getRandomPassage, getInitialPassage } from './utils/passageUtils'
-import type { difficulty, mode, StatsData } from './types'
+import type { difficulty, mode } from './types'
 
 import TypingArea from './components/TypingArea'
 import Stats from './components/Stats'
@@ -13,18 +14,16 @@ import Options from './components/Options'
 
 function App() {
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const { timeElapsed, startTimer, resetTimer, stopTimer } = useTimer()
 
   const [mode, setMode] = useState<mode>('passage')
   const [userInput, setUserInput] = useState<string>('')
-  const [stats, setStats] = useState<StatsData>({
-    wpm: 0,
-    accuracy: 100
-  })
   const [difficulty, setDifficulty] = useState<difficulty>('easy')
   const [currentPassage, setCurrentPassage] = useState<string>(getInitialPassage('easy'))
   const characters: string[] = currentPassage.split('')
+
+  const inputRef = useRef<HTMLInputElement>(null)
+  const { timeElapsed, startTimer, resetTimer, stopTimer } = useTimer()
+  const {stats, resetStats }= useStats(userInput, characters, timeElapsed)  
 
   const isCompleted = isTestComplete(mode, userInput, characters, timeElapsed);
 
@@ -36,11 +35,11 @@ function App() {
     if (isCompleted) stopTimer()
   }, [isCompleted])
 
-useFocus(inputRef, [mode, difficulty])  
+  useFocus(inputRef, [mode, difficulty])
 
   const resetTest = () => {
     resetTimer()
-    setStats({ wpm: 0, accuracy: 100 })
+    resetStats()
     setUserInput('')
   }
 
@@ -72,7 +71,6 @@ useFocus(inputRef, [mode, difficulty])
         ref={inputRef}
         startTimer={startTimer}
         elapsedTime={timeElapsed}
-        onStatsUpdate={setStats}
         userInput={userInput}
         setUserInput={setUserInput}
         isCompleted={isCompleted}
