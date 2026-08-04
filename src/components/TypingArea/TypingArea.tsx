@@ -5,7 +5,6 @@ import styles from '../TypingArea/TypingArea.module.scss'
 
 type TypingAreaProps = {
     startTimer: () => void
-    elapsedTime: number
     userInput: string
     setUserInput: (input: string) => void
     characters: string[]

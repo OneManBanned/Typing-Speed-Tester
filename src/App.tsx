@@ -70,7 +70,6 @@ function App() {
       <TypingArea
         ref={inputRef}
         startTimer={startTimer}
-        elapsedTime={timeElapsed}
         userInput={userInput}
         setUserInput={setUserInput}
         isCompleted={isCompleted}
