@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 
 import { useTimer } from './hooks/useTimer'
 import { useFocus } from './hooks/useFocus'
 import { useStats } from './hooks/useStats'
+import {useHighScore} from './hooks/useHighScore'
 import { isTestComplete } from './utils/testUtils'
 import { getRandomPassage, getInitialPassage } from './utils/passageUtils'
 import type { difficulty, mode } from './types'
@@ -19,13 +20,24 @@ function App() {
   const [userInput, setUserInput] = useState<string>('')
   const [difficulty, setDifficulty] = useState<difficulty>('easy')
   const [currentPassage, setCurrentPassage] = useState<string>(getInitialPassage('easy'))
-  const characters: string[] = currentPassage.split('')
+  const characters: string[] = useMemo(() => currentPassage.split(''), [currentPassage] )
 
   const inputRef = useRef<HTMLInputElement>(null)
   const { timeElapsed, startTimer, resetTimer, stopTimer } = useTimer()
   const {stats, resetStats }= useStats(userInput, characters, timeElapsed)  
 
   const isCompleted = isTestComplete(mode, userInput, characters, timeElapsed);
+  const { updateHighScore } = useHighScore()
+  
+  
+  useEffect(() => {
+    if (isCompleted) {
+      const isNewHighScore = updateHighScore(mode, difficulty, stats.wpm, stats.accuracy)
+      if (isNewHighScore) {
+        console.log('New high score achieved!')
+      }
+    }
+  }, [isCompleted])  
 
   useEffect(() => {
     setCurrentPassage(getRandomPassage(difficulty))

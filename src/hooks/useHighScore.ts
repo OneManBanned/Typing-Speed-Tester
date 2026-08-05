@@ -25,7 +25,7 @@ const defaultHighScores: HighScores = {
     timed: { easy: null, medium: null, hard: null }
 };
 
-const useHighScore = () => {
+export const useHighScore = () => {
 
     const [highScore, setHighScore] = useState<HighScores>(defaultHighScores)
 
