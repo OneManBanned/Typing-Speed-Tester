@@ -27,8 +27,9 @@ function App() {
   const {stats, resetStats }= useStats(userInput, characters, timeElapsed)  
 
   const isCompleted = isTestComplete(mode, userInput, characters, timeElapsed);
-  const { updateHighScore } = useHighScore()
-  
+
+  const { updateHighScore, getHighScore } = useHighScore()
+  const currentHighScore = getHighScore(mode, difficulty)
   
   useEffect(() => {
     if (isCompleted) {
@@ -78,6 +79,7 @@ function App() {
         wpm={stats.wpm}
         accuracy={stats.accuracy}
         mode={mode}
+        highScore={currentHighScore} 
       />
       <TypingArea
         ref={inputRef}

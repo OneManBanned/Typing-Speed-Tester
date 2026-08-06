@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import type { mode, difficulty } from '../types';
 
-type HighScoreData = {
+export type HighScoreData = {
     wpm: number;
     accuracy: number;
     date: string;

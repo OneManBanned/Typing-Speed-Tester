@@ -1,13 +1,15 @@
 import styles from './Stats.module.scss'
+import type { HighScoreData } from '../../hooks/useHighScore'
 
 type statsProps = {
     timeElapsed: number
     wpm: number
     accuracy: number
     mode: 'passage' | 'timed'
+    highScore: HighScoreData | null
 }
 
-function Stats({ timeElapsed, wpm, accuracy, mode }: statsProps) {
+function Stats({ timeElapsed, wpm, accuracy, mode, highScore }: statsProps) {
 
     const displayTime = mode === 'passage' ? timeElapsed : Math.max(0, 60 - timeElapsed)
     const formatTime = (seconds: number) => {
@@ -22,10 +24,15 @@ function Stats({ timeElapsed, wpm, accuracy, mode }: statsProps) {
             role="timer"
             aria-label="timer-elapsed"
         >
-        {formatTime(displayTime)}
+            {formatTime(displayTime)}
         </div>
         <div>{wpm}</div>
         <div>{accuracy}</div>
+         {highScore && (
+                    <span className={styles.best}>
+                 🏆 Best: {highScore.wpm}
+                    </span>
+                )}
     </div>
 
 
