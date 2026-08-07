@@ -27,19 +27,21 @@ const defaultHighScores: HighScores = {
 
 export const useHighScore = () => {
 
-    const [highScore, setHighScore] = useState<HighScores>(defaultHighScores)
 
-    useEffect(() => {
+    const getInitialHighScores = () => {
         const stored = localStorage.getItem(STORAGE_KEY); 
         if (stored) {
             try {
-                const parsed: HighScores = JSON.parse(stored);
-                setHighScore(parsed);
+                 const parsed: HighScores = JSON.parse(stored);
+                 return parsed
             }  catch (error) {
                 console.error('Failed to parse high score data from localStorage:', error);
             }
         }
-    }, [])
+            return defaultHighScores;
+    }
+
+    const [highScore, setHighScore] = useState<HighScores>(getInitialHighScores());
 
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(highScore));
